@@ -186,8 +186,9 @@
             <div class="add-server-form">
                 <input type="text" id="srvName" placeholder="Nombre del Servidor">
                 <input type="text" id="srvIp" placeholder="IP:Puerto">
-                <input type="text" id="srvImg" placeholder="URL de Imagen">
-                <button class="btn-signin-nav" style="width: 100%;" onclick="submitServer()">ENVIAR A REVISIÓN</button>
+                <p style="font-size:0.6rem; color:gray; margin-bottom:5px;">Foto del servidor (320x180):</p>
+                <input type="file" id="srvFile" accept="image/*" style="background:none; border:none; padding:0;">
+                <button id="btnSubmitServer" class="btn-signin-nav" style="width: 100%; margin-top:10px;" onclick="submitServer()">ENVIAR A REVISIÓN</button>
             </div>
         </div>
     </div>
@@ -258,11 +259,52 @@
         async function submitServer() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if(!user) return alert("Debes estar logueado");
+            
             const name = document.getElementById('srvName').value;
             const ip = document.getElementById('srvIp').value;
-            const img = document.getElementById('srvImg').value;
-            const { error } = await supabaseClient.from('servers').insert([{ owner_id: user.id, server_name: name, server_ip: ip, image_url: img }]);
-            if (error) alert(error.message); else { alert("Servidor enviado a revisión."); toggleAddServerModal(false); }
+            const fileInput = document.getElementById('srvFile');
+            const btn = document.getElementById('btnSubmitServer');
+
+            if(!name || !ip || !fileInput.files[0]) return alert("Rellena todos los campos y selecciona una imagen");
+
+            btn.innerText = "SUBIENDO...";
+            btn.disabled = true;
+
+            try {
+                const file = fileInput.files[0];
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Math.random()}.${fileExt}`;
+                const filePath = `${user.id}/${fileName}`;
+
+                // 1. Subir a Storage
+                const { error: uploadError } = await supabaseClient.storage
+                    .from('server-images')
+                    .upload(filePath, file);
+
+                if (uploadError) throw uploadError;
+
+                // 2. Obtener URL Publica
+                const { data: urlData } = supabaseClient.storage
+                    .from('server-images')
+                    .getPublicUrl(filePath);
+
+                const publicUrl = urlData.publicUrl;
+
+                // 3. Insertar en tabla
+                const { error: insertError } = await supabaseClient.from('servers').insert([
+                    { owner_id: user.id, server_name: name, server_ip: ip, image_url: publicUrl, status: 'pending' }
+                ]);
+
+                if (insertError) throw insertError;
+
+                alert("¡Servidor enviado a revisión!");
+                toggleAddServerModal(false);
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.innerText = "ENVIAR A REVISIÓN";
+                btn.disabled = false;
+            }
         }
 
         async function handleLogin() {
