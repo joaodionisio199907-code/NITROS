@@ -41,7 +41,7 @@
         .hero-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; transform: translate(-50%, -50%); filter: brightness(0.3); }
         .hero-content h1 { font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; line-height: 1; margin-bottom: 20px; }
 
-        /* --- SECCIÓN PASOS CON FOTOS --- */
+        /* --- SECCIÓN PASOS --- */
         .section-padding { padding: 100px 10%; }
         .steps-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
         .step-card { 
@@ -62,6 +62,38 @@
         .server-card { min-width: 300px; height: 200px; background: var(--card-bg); border-radius: 15px; position: relative; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
         .server-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
         .server-info { position: absolute; bottom: 0; padding: 20px; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,0.9)); }
+
+        /* --- ZAP HOSTING & ANIMACIÓN --- */
+        @keyframes zap-heartbeat {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(87, 187, 138, 0)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 15px rgba(87, 187, 138, 0.5)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(87, 187, 138, 0)); }
+        }
+        
+        .zap-banner-wrapper {
+            background: linear-gradient(145deg, #1a1c1e, #0b0c0d);
+            border-radius: 20px;
+            border: 1px solid rgba(87, 187, 138, 0.2);
+            padding: 50px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .zap-banner-wrapper a img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            animation: zap-heartbeat 2s infinite ease-in-out;
+            transition: 0.3s;
+        }
+
+        .zap-banner-wrapper a:hover img {
+            animation-play-state: paused;
+            filter: drop-shadow(0 0 25px rgba(87, 187, 138, 0.8));
+        }
 
         /* --- BOTONES --- */
         .btn { padding: 15px 35px; border-radius: 5px; text-decoration: none; font-weight: 800; display: inline-block; transition: 0.4s; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
@@ -138,18 +170,22 @@
 
     <section id="servers" class="section-padding" style="background: #08090a;">
         <h2 data-aos="fade-right">SERVIDORES ACTIVOS</h2>
-        <div class="server-row" id="serverContainer" data-aos="zoom-in">
-            </div>
+        <div class="server-row" id="serverContainer" data-aos="zoom-in"></div>
     </section>
 
     <section id="hosting" class="section-padding">
-        <div class="step-card" style="height: auto; padding: 60px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 30px; background: linear-gradient(90deg, #1a1c1e, #0b0c0d);" data-aos="flip-up">
+        <div class="zap-banner-wrapper" data-aos="flip-up">
             <div>
-                <span style="color: var(--zap); font-weight: 800; letter-spacing: 2px;">ZAP-HOSTING PARTNER</span>
+                <span style="color: var(--zap); font-weight: 800; letter-spacing: 2px; font-size: 0.8rem;">PARTNER OFICIAL</span>
                 <h2 style="margin: 10px 0 5px 0;">¿QUIERES TU PROPIO MUNDO?</h2>
-                <p style="color: var(--text-secondary);">Crea tu servidor de NitroSMP hoy mismo. Usa el código: <b>NITROSMP</b></p>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Crea tu servidor de NitroSMP hoy mismo. Usa el código: <b style="color: var(--zap);">NITROSM-a-9784</b></p>
             </div>
-            <a href="TU_LINK_AFILIADO_ZAP" class="btn btn-zap">Alquilar Servidor <i class="fas fa-external-link-alt"></i></a>
+
+            <a href="https://zap-hosting.com/a/1204b338c0cc742f67f88b8ddbbd743dedd423f0?voucher=NITROSMP-a-9784" target="_blank">
+                <img src="https://zap-hosting.com/interface/download/images.php?type=affiliate&id=450223" alt="ZAP-Hosting Gameserver and Webhosting">
+            </a>
+
+            <a href="https://zap-hosting.com/a/1204b338c0cc742f67f88b8ddbbd743dedd423f0?voucher=NITROSMP-a-9784" class="btn btn-zap">Alquilar Servidor <i class="fas fa-external-link-alt"></i></a>
         </div>
     </section>
 
@@ -181,7 +217,6 @@
     <script>
         AOS.init({ duration: 1000, once: true });
 
-        // Configuración Supabase
         const SB_URL = 'https://gndwlhhytlifsjykrvzo.supabase.co';
         const SB_KEY = 'sb_publishable_tDmv4H2XfMRVLIi-mTWzmA_cbKQybzu';
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
