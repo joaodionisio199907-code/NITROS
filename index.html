@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NITROSMP | GTA V Multiplayer Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #007bff; /* Azul RAGE */
+            --primary-hover: #0056b3;
+            --bg-body: #0f1011;
+            --bg-nav: rgba(15, 16, 17, 0.95);
+            --text-main: #ffffff;
+            --text-secondary: #aeb1b4;
+            --card-bg: #18191b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10%;
+            background: var(--bg-nav);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
+        .logo span { color: var(--primary); }
+        
+        .nav-links a { 
+            color: var(--text-secondary); 
+            text-decoration: none; 
+            margin-right: 25px; 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+        .nav-links a:hover { color: #fff; }
+
+        .auth-buttons .btn-login { color: #fff; text-decoration: none; margin-right: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer;}
+        .auth-buttons .btn-download { 
+            background: var(--primary); 
+            color: #fff; 
+            padding: 12px 24px; 
+            border-radius: 4px; 
+            font-weight: 700; 
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .auth-buttons .btn-download:hover { background: var(--primary-hover); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 80px;
+            overflow: hidden;
+        }
+        .hero-video-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+        }
+        .hero-video-container iframe {
+            width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .hero-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: -1;
+        }
+
+        .hero h1 { font-size: 4.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 10px; text-transform: uppercase; }
+        .hero p { font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin-bottom: 35px; font-weight: 400; }
+        
+        .hero-btns { display: flex; gap: 15px; }
+        .btn-lg { 
+            padding: 18px 40px; 
+            border-radius: 4px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            font-size: 1rem; 
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-outline { border: 2px solid #fff; color: #fff; }
+        .btn-outline:hover { background: #fff; color: #000; }
+
+        /* --- MODALS --- */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9); align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: #1c1e20; width: 100%; max-width: 450px; padding: 40px; border-radius: 8px; text-align: left;
+        }
+        .modal-content h2 { margin-bottom: 25px; font-weight: 900; text-transform: uppercase; font-size: 1.8rem; }
+        .input-field { width: 100%; padding: 15px; background: #2a2d30; border: 1px solid #3d4146; color: #fff; margin-bottom: 15px; border-radius: 4px; outline: none;}
+        .input-field:focus { border-color: var(--primary); }
+
+        /* --- STATS SECTION --- */
+        .stats-bar {
+            background: var(--card-bg);
+            padding: 40px 10%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+        .stat-item h3 { font-size: 2rem; font-weight: 900; color: var(--primary); }
+        .stat-item p { text-transform: uppercase; font-size: 0.75rem; color: var(--text-secondary); font-weight: 700; }
+
+        /* --- REQUIREMENTS & FAQ (ESTILO LIMPIO) --- */
+        .content-section { padding: 100px 10%; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .section-header { margin-bottom: 50px; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; }
+        
+        .req-box { background: var(--card-bg); padding: 30px; border-radius: 4px; }
+        .req-box h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-weight: 800; }
+        .req-line { display: flex; justify-content: space-between; border-bottom: 1px solid #2a2d30; padding: 10px 0; font-size: 0.9rem; }
+        .req-line span:first-child { color: var(--text-secondary); }
+
+        .faq-item { margin-bottom: 30px; }
+        .faq-item h4 { margin-bottom: 10px; font-size: 1.1rem; color: #fff; }
+        .faq-item p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        footer { background: #0a0a0a; padding: 60px 10%; text-align: center; border-top: 1px solid #1c1e20; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">NITRO<span>SMP</span></div>
+        <div class="nav-links">
+            <a href="#">Wiki</a>
+            <a href="#">Servers</a>
+            <a href="#">Bug Tracker</a>
+            <a href="#">Development</a>
+        </div>
+        <div class="auth-buttons">
+            <a class="btn-login" onclick="openModal('login-modal')">Sign In</a>
+            <a href="#" class="btn-download" onclick="openModal('reg-modal')">Sign Up</a>
+        </div>
+    </nav>
+
+    <div id="login-modal" class="modal" onclick="closeModal(event, 'login-modal')">
+        <div class="modal-content">
+            <h2>Sign In</h2>
+            <input type="text" class="input-field" placeholder="Username">
+            <input type="password" class="input-field" placeholder="Password">
+            <button class="btn-lg btn-primary" style="width: 100%; border: none; cursor: pointer;">Login</button>
+        </div>
+    </div>
+
+    <div id="reg-modal" class="modal" onclick="closeModal(event, 'reg-modal')">
+        <div class="modal-content">
+            <h2>Create Account</h2>
+            <input type="text" class="input-field" placeholder="Username">
+            <input type="email" class="input-field" placeholder="Email Address">
+            <input type="password" class="input-field" placeholder="Password">
+            <button class="btn-lg btn-primary" style="width: 100%; border: none; cursor: pointer;">Register</button>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-video-container">
+            <iframe src="https://www.youtube.com/embed/VLkOQJoeGPE?autoplay=1&mute=1&loop=1&playlist=VLkOQJoeGPE&controls=0&modestbranding=1&rel=0" frameborder="0"></iframe>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Create. Play. Explore.</h1>
+            <p>NitroSMP is a free multiplayer framework for GTA V allowing you to play on dedicated servers with custom game modes.</p>
+            <div class="hero-btns">
+                <a href="#" class="btn-lg btn-primary">Download Client</a>
+                <a href="#" class="btn-lg btn-outline">Host a Server</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stat-item"><h3>45,102</h3><p>Players Online</p></div>
+        <div class="stat-item"><h3>1,204</h3><p>Active Servers</p></div>
+        <div class="stat-item"><h3>2.4M</h3><p>Total Registered</p></div>
+        <div class="stat-item"><h3>60Hz</h3><p>Server Tickrate</p></div>
+    </div>
+
+    <div class="content-section">
+        <div class="grid-2">
+            <div>
+                <div class="section-header"><h2>Requirements</h2></div>
+                <div class="req-box" style="margin-bottom: 20px;">
+                    <h4>Minimum</h4>
+                    <div class="req-line"><span>OS</span><span>Windows 10</span></div>
+                    <div class="req-line"><span>CPU</span><span>Intel Core 2 Q6600</span></div>
+                    <div class="req-line"><span>RAM</span><span>8 GB</span></div>
+                    <div class="req-line"><span>GPU</span><span>NVIDIA 9800 GT 1GB</span></div>
+                </div>
+                <div class="req-box">
+                    <h4>Recommended</h4>
+                    <div class="req-line"><span>OS</span><span>Windows 11</span></div>
+                    <div class="req-line"><span>CPU</span><span>Intel Core i5 3470</span></div>
+                    <div class="req-line"><span>RAM</span><span>16 GB</span></div>
+                    <div class="req-line"><span>GPU</span><span>NVIDIA GTX 660 2GB</span></div>
+                </div>
+            </div>
+            <div>
+                <div class="section-header"><h2>FAQ</h2></div>
+                <div class="faq-item">
+                    <h4>Will I get banned from GTA Online?</h4>
+                    <p>No. NitroSMP doesn't interact with Rockstar Online Services. It uses its own hooks and doesn't modify your original game files.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Does it work with Epic Games / Steam?</h4>
+                    <p>Yes, NitroSMP is compatible with all official legal versions of Grand Theft Auto V.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I create my own server?</h4>
+                    <p>Absolutely. We provide the server files for free. You can script in C#, JavaScript or Lua.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" style="background: #111; text-align: center;">
+        <div class="section-header"><h2>Support the Project</h2></div>
+        <p style="color: var(--text-secondary); margin-bottom: 30px;">NitroSMP is a community-driven project. Help us keep the master-list online.</p>
+        <a href="#" class="btn-lg btn-primary" style="background: #f39c12;">Donate to Dev</a>
+    </div>
+
+    <footer>
+        <p style="color: var(--text-secondary);">&copy; 2026 NitroSMP Team. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
+    </footer>
+
+    <script>
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(event, id) { 
+            if (event.target === document.getElementById(id) || event.target.className === 'close-btn') {
+                document.getElementById(id).style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
