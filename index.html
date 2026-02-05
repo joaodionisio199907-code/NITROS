@@ -6,259 +6,336 @@
     <title>NITROSMP | GTA V Multiplayer Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #007bff; /* Azul RAGE */
+            --primary: #007bff;
             --primary-hover: #0056b3;
-            --bg-body: #0f1011;
-            --bg-nav: rgba(15, 16, 17, 0.95);
+            --bg-body: #0b0c0d;
+            --bg-nav: rgba(5, 5, 5, 0.98);
             --text-main: #ffffff;
             --text-secondary: #aeb1b4;
-            --card-bg: #18191b;
+            --card-bg: #141517;
+            --accent-orange: #f39c12;
+            --bg-darker: #08090a;
         }
 
+        /* --- BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
-        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        h2 { font-weight: 900; text-transform: uppercase; letter-spacing: -1px; margin-bottom: 30px; }
 
-        /* --- NAVIGATION --- */
+        /* --- NAVEGACIÓN --- */
         nav {
-            height: 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10%;
-            background: var(--bg-nav);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            height: 80px; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5%; background: var(--bg-nav); position: fixed; width: 100%; top: 0; z-index: 1000;
+            border-bottom: 2px solid var(--primary); backdrop-filter: blur(15px);
         }
-        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
+        .logo { font-size: 1.6rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; cursor: pointer; }
         .logo span { color: var(--primary); }
-        
-        .nav-links a { 
-            color: var(--text-secondary); 
-            text-decoration: none; 
-            margin-right: 25px; 
-            font-size: 0.85rem; 
-            font-weight: 700; 
-            text-transform: uppercase;
-            transition: 0.2s;
-        }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; margin-right: 25px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; transition: 0.2s; }
         .nav-links a:hover { color: #fff; }
-
-        .auth-buttons .btn-login { color: #fff; text-decoration: none; margin-right: 20px; font-weight: 700; font-size: 0.85rem; cursor: pointer;}
-        .auth-buttons .btn-download { 
-            background: var(--primary); 
-            color: #fff; 
-            padding: 12px 24px; 
-            border-radius: 4px; 
-            font-weight: 700; 
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: 0.2s;
-        }
-        .auth-buttons .btn-download:hover { background: var(--primary-hover); }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding-top: 80px;
-            overflow: hidden;
-        }
-        .hero-video-container {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -2;
-        }
-        .hero-video-container iframe {
-            width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh;
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-        .hero-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: -1;
-        }
-
-        .hero h1 { font-size: 4.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 10px; text-transform: uppercase; }
-        .hero p { font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin-bottom: 35px; font-weight: 400; }
         
-        .hero-btns { display: flex; gap: 15px; }
-        .btn-lg { 
-            padding: 18px 40px; 
-            border-radius: 4px; 
-            font-weight: 700; 
-            text-decoration: none; 
-            font-size: 1rem; 
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-        .btn-primary { background: var(--primary); color: #fff; }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
-        .btn-outline { border: 2px solid #fff; color: #fff; }
-        .btn-outline:hover { background: #fff; color: #000; }
+        .auth-buttons { display: flex; align-items: center; gap: 20px; }
+        .btn-download-nav { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: 0.3s; }
+        .btn-download-nav:hover { color: #fff; }
+        .btn-signin-nav { background: var(--primary); color: #fff; padding: 10px 25px; border-radius: 4px; text-decoration: none; font-weight: 800; font-size: 0.85rem; transition: 0.3s; cursor: pointer; border: none; }
+        .btn-signin-nav:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,123,255,0.3); }
 
-        /* --- MODALS --- */
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.9); align-items: center; justify-content: center;
+        /* --- MODAL LOGIN/REGISTER --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            display: none; align-items: center; justify-content: center; z-index: 2000;
         }
-        .modal-content {
-            background: #1c1e20; width: 100%; max-width: 450px; padding: 40px; border-radius: 8px; text-align: left;
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: #1c1e20; width: 100%; max-width: 400px; padding: 40px;
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+            position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
-        .modal-content h2 { margin-bottom: 25px; font-weight: 900; text-transform: uppercase; font-size: 1.8rem; }
-        .input-field { width: 100%; padding: 15px; background: #2a2d30; border: 1px solid #3d4146; color: #fff; margin-bottom: 15px; border-radius: 4px; outline: none;}
-        .input-field:focus { border-color: var(--primary); }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.2rem; color: var(--text-secondary); cursor: pointer; transition: 0.3s; }
+        .modal-tabs { display: flex; margin-bottom: 30px; border-bottom: 1px solid #333; }
+        .tab-btn { background: none; border: none; color: var(--text-secondary); padding: 10px 20px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: 0.3s; }
+        .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
+        .input-field { width: 100%; padding: 12px; background: #2a2d30; border: 1px solid #3d4146; color: #fff; border-radius: 4px; outline: none; }
 
-        /* --- STATS SECTION --- */
-        .stats-bar {
-            background: var(--card-bg);
-            padding: 40px 10%;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-        }
-        .stat-item h3 { font-size: 2rem; font-weight: 900; color: var(--primary); }
-        .stat-item p { text-transform: uppercase; font-size: 0.75rem; color: var(--text-secondary); font-weight: 700; }
-
-        /* --- REQUIREMENTS & FAQ (ESTILO LIMPIO) --- */
-        .content-section { padding: 100px 10%; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
-        .section-header { margin-bottom: 50px; }
-        .section-header h2 { font-size: 2.5rem; font-weight: 900; text-transform: uppercase; }
+        /* --- HERO --- */
+        .hero { height: 90vh; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding-left: 10%; }
+        .hero-video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
+        .hero-video-container iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 60%, transparent 100%); z-index: -1; }
+        .hero h1 { font-size: 4.5rem; font-weight: 900; line-height: 1; margin-bottom: 20px; }
         
-        .req-box { background: var(--card-bg); padding: 30px; border-radius: 4px; }
-        .req-box h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-weight: 800; }
-        .req-line { display: flex; justify-content: space-between; border-bottom: 1px solid #2a2d30; padding: 10px 0; font-size: 0.9rem; }
-        .req-line span:first-child { color: var(--text-secondary); }
+        /* --- SERVIDORES --- */
+        .section-padding { padding: 80px 10%; }
+        .server-row { display: flex; gap: 20px; overflow-x: auto; padding: 20px 0; scrollbar-width: none; }
+        .server-card { min-width: 320px; height: 180px; background: var(--card-bg); border-radius: 8px; position: relative; overflow: hidden; transition: 0.4s ease; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .server-card:hover { transform: scale(1.05); border-color: var(--primary); }
+        .server-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .server-info { position: absolute; bottom: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
 
-        .faq-item { margin-bottom: 30px; }
-        .faq-item h4 { margin-bottom: 10px; font-size: 1.1rem; color: #fff; }
+        /* --- CÓMO EMPEZAR --- */
+        .start-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .start-card { background: #141517; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); position: relative; min-height: 300px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .start-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
+        .start-content { position: relative; z-index: 1; padding: 40px; background: linear-gradient(to top, #141517 40%, transparent); }
+
+        /* --- REQUIREMENTS --- */
+        .req-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 10px; overflow: hidden; }
+        .req-table th, .req-table td { padding: 20px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .req-table th { background: rgba(0, 123, 255, 0.1); color: var(--primary); font-size: 0.8rem; text-transform: uppercase; }
+        .req-table tr:last-child td { border-bottom: none; }
+
+        /* --- FAQ --- */
+        .faq-container { display: grid; gap: 15px; }
+        .faq-item { background: var(--card-bg); border-radius: 8px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .faq-item h3 { font-size: 1.1rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .faq-item p { color: var(--text-secondary); font-size: 0.95rem; }
 
-        footer { background: #0a0a0a; padding: 60px 10%; text-align: center; border-top: 1px solid #1c1e20; }
+        /* --- DONACIONES --- */
+        .donate-section { text-align: center; background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://media.rockstargames.com/rockstargames-new/img/global/news/upload/actual_1596715655.jpg'); background-size: cover; padding: 100px 5%; }
+        .donate-card { display: inline-block; padding: 50px; background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); border-radius: 15px; border: 1px solid var(--accent-orange); }
+
+        footer { padding: 40px; background: #050505; text-align: center; color: var(--text-secondary); font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">NITRO<span>SMP</span></div>
+        <div class="logo" onclick="window.scrollTo(0,0)">NITRO<span>SMP</span></div>
         <div class="nav-links">
-            <a href="#">Wiki</a>
-            <a href="#">Servers</a>
-            <a href="#">Bug Tracker</a>
-            <a href="#">Development</a>
+            <a href="#servers">Servidores</a>
+            <a href="#how-to-start">Empezar</a>
+            <a href="#reqs">Requisitos</a>
+            <a href="#faq">FAQ</a>
         </div>
-        <div class="auth-buttons">
-            <a class="btn-login" onclick="openModal('login-modal')">Sign In</a>
-            <a href="#" class="btn-download" onclick="openModal('reg-modal')">Sign Up</a>
+        <div class="auth-buttons" id="navAuthSection">
+            <a href="#how-to-start" class="btn-download-nav">DESCARGAR</a>
+            <button class="btn-signin-nav" onclick="toggleModal(true)">SIGN IN</button>
         </div>
     </nav>
 
-    <div id="login-modal" class="modal" onclick="closeModal(event, 'login-modal')">
-        <div class="modal-content">
-            <h2>Sign In</h2>
-            <input type="text" class="input-field" placeholder="Username">
-            <input type="password" class="input-field" placeholder="Password">
-            <button class="btn-lg btn-primary" style="width: 100%; border: none; cursor: pointer;">Login</button>
-        </div>
-    </div>
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <i class="fas fa-times close-modal" onclick="toggleModal(false)"></i>
+            <div class="modal-tabs">
+                <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">LOGIN</button>
+                <button id="regTab" class="tab-btn" onclick="switchTab('register')">REGISTER</button>
+            </div>
+            
+            <div id="loginForm">
+                <div class="input-group"><label>Email</label><input type="email" id="loginEmail" class="input-field" placeholder="tu@email.com"></div>
+                <div class="input-group"><label>Contraseña</label><input type="password" id="loginPass" class="input-field" placeholder="••••••••"></div>
+                <button class="btn-signin-nav" style="width: 100%; height: 50px;" onclick="handleLogin()">ENTRAR</button>
+            </div>
 
-    <div id="reg-modal" class="modal" onclick="closeModal(event, 'reg-modal')">
-        <div class="modal-content">
-            <h2>Create Account</h2>
-            <input type="text" class="input-field" placeholder="Username">
-            <input type="email" class="input-field" placeholder="Email Address">
-            <input type="password" class="input-field" placeholder="Password">
-            <button class="btn-lg btn-primary" style="width: 100%; border: none; cursor: pointer;">Register</button>
+            <div id="regForm" style="display: none;">
+                <div class="input-group"><label>Usuario</label><input type="text" id="regUser" class="input-field" placeholder="Nombre de piloto"></div>
+                <div class="input-group"><label>Email</label><input type="email" id="regEmail" class="input-field" placeholder="tu@email.com"></div>
+                <div class="input-group"><label>Contraseña</label><input type="password" id="regPass" class="input-field" placeholder="Mín. 6 caracteres"></div>
+                <button class="btn-signin-nav" style="width: 100%; height: 50px; background: var(--accent-orange);" onclick="handleRegister()">CREAR CUENTA</button>
+            </div>
         </div>
     </div>
 
     <section class="hero">
         <div class="hero-video-container">
-            <iframe src="https://www.youtube.com/embed/VLkOQJoeGPE?autoplay=1&mute=1&loop=1&playlist=VLkOQJoeGPE&controls=0&modestbranding=1&rel=0" frameborder="0"></iframe>
+            <iframe src="https://www.youtube.com/embed/R7Tx6emmEmY?autoplay=1&mute=1&loop=1&playlist=R7Tx6emmEmY&controls=0&modestbranding=1&rel=0" frameborder="0"></iframe>
         </div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Create. Play. Explore.</h1>
-            <p>NitroSMP is a free multiplayer framework for GTA V allowing you to play on dedicated servers with custom game modes.</p>
-            <div class="hero-btns">
-                <a href="#" class="btn-lg btn-primary">Download Client</a>
-                <a href="#" class="btn-lg btn-outline">Host a Server</a>
+            <h1>LA EVOLUCIÓN <br> DEL MULTIJUGADOR</h1>
+            <p>NitroSMP te permite jugar en servidores privados con mods, scripts personalizados y miles de jugadores.</p>
+            <div style="display: flex; gap: 15px;">
+                <a href="#how-to-start" class="btn-signin-nav" style="padding: 15px 40px;">JUGAR AHORA</a>
+                <a href="#servers" class="btn-signin-nav" style="padding: 15px 40px; background: rgba(255,255,255,0.1); border: 1px solid #fff;">EXPLORAR</a>
             </div>
         </div>
     </section>
 
-    <div class="stats-bar">
-        <div class="stat-item"><h3>45,102</h3><p>Players Online</p></div>
-        <div class="stat-item"><h3>1,204</h3><p>Active Servers</p></div>
-        <div class="stat-item"><h3>2.4M</h3><p>Total Registered</p></div>
-        <div class="stat-item"><h3>60Hz</h3><p>Server Tickrate</p></div>
-    </div>
+    <section id="servers" class="section-padding">
+        <h2>Servidores Populares</h2>
+        <div class="server-row">
+            <div class="server-card">
+                <img src="https://i.ytimg.com/vi/qY_B6H-r-5k/maxresdefault.jpg" class="server-img">
+                <div class="server-info"><h4>ESPAÑA REAL RP</h4><div style="color:var(--primary); font-weight:800; font-size:0.8rem;">450/500 PLAYERS</div></div>
+            </div>
+            <div class="server-card">
+                <img src="https://wallpapers.com/images/featured/gta-5-city-background-z5v0c9lq2v0e86b2.jpg" class="server-img">
+                <div class="server-info"><h4>NITRO DRIFT WORLD</h4><div style="color:var(--primary); font-weight:800; font-size:0.8rem;">120/200 PLAYERS</div></div>
+            </div>
+            <div class="server-card">
+                <img src="https://media.rockstargames.com/rockstargames-new/img/global/news/upload/actual_1596715655.jpg" class="server-img">
+                <div class="server-info"><h4>HARDCORE SURVIVAL</h4><div style="color:var(--primary); font-weight:800; font-size:0.8rem;">64/64 PLAYERS</div></div>
+            </div>
+        </div>
+    </section>
 
-    <div class="content-section">
-        <div class="grid-2">
-            <div>
-                <div class="section-header"><h2>Requirements</h2></div>
-                <div class="req-box" style="margin-bottom: 20px;">
-                    <h4>Minimum</h4>
-                    <div class="req-line"><span>OS</span><span>Windows 10</span></div>
-                    <div class="req-line"><span>CPU</span><span>Intel Core 2 Q6600</span></div>
-                    <div class="req-line"><span>RAM</span><span>8 GB</span></div>
-                    <div class="req-line"><span>GPU</span><span>NVIDIA 9800 GT 1GB</span></div>
-                </div>
-                <div class="req-box">
-                    <h4>Recommended</h4>
-                    <div class="req-line"><span>OS</span><span>Windows 11</span></div>
-                    <div class="req-line"><span>CPU</span><span>Intel Core i5 3470</span></div>
-                    <div class="req-line"><span>RAM</span><span>16 GB</span></div>
-                    <div class="req-line"><span>GPU</span><span>NVIDIA GTX 660 2GB</span></div>
+    <section id="how-to-start" class="section-padding" style="background:var(--bg-darker);">
+        <h2>Cómo Empezar</h2>
+        <div class="start-grid">
+            <div class="start-card">
+                <img src="https://gaming-cdn.com/images/products/186/orig/grand-theft-auto-v-pc-juego-rockstar-cover.jpg?v=1650531551">
+                <div class="start-content">
+                    <span style="color:var(--primary); font-weight:800; font-size:0.8rem;">PASO 1</span>
+                    <h3>Compra Grand Theft Auto V</h3>
+                    <a href="https://www.rockstargames.com/gta-v/buy" target="_blank" class="btn-signin-nav" style="font-size:0.7rem; margin-top: 10px;">COMPRAR AHORA</a>
                 </div>
             </div>
-            <div>
-                <div class="section-header"><h2>FAQ</h2></div>
-                <div class="faq-item">
-                    <h4>Will I get banned from GTA Online?</h4>
-                    <p>No. NitroSMP doesn't interact with Rockstar Online Services. It uses its own hooks and doesn't modify your original game files.</p>
-                </div>
-                <div class="faq-item">
-                    <h4>Does it work with Epic Games / Steam?</h4>
-                    <p>Yes, NitroSMP is compatible with all official legal versions of Grand Theft Auto V.</p>
-                </div>
-                <div class="faq-item">
-                    <h4>Can I create my own server?</h4>
-                    <p>Absolutely. We provide the server files for free. You can script in C#, JavaScript or Lua.</p>
+            <div class="start-card">
+                <img src="https://files.gtanet.com/gtav/screenshots/rockstar-editor/gtav_rockstareditor_02.jpg">
+                <div class="start-content">
+                    <span style="color:var(--primary); font-weight:800; font-size:0.8rem;">PASO 2</span>
+                    <h3>Descarga NITROSMP</h3>
+                    <a href="#" class="btn-signin-nav" style="font-size:0.7rem; background: #fff; color: #000; margin-top: 10px;">DESCARGAR CLIENTE</a>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="content-section" style="background: #111; text-align: center;">
-        <div class="section-header"><h2>Support the Project</h2></div>
-        <p style="color: var(--text-secondary); margin-bottom: 30px;">NitroSMP is a community-driven project. Help us keep the master-list online.</p>
-        <a href="#" class="btn-lg btn-primary" style="background: #f39c12;">Donate to Dev</a>
-    </div>
+    <section id="reqs" class="section-padding">
+        <h2>Requisitos del Sistema</h2>
+        <table class="req-table">
+            <thead>
+                <tr><th>Componente</th><th>Mínimo</th><th>Recomendado</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>SO</td><td>Windows 10 64-bit</td><td>Windows 11 64-bit</td></tr>
+                <tr><td>CPU</td><td>Intel Core i5 3470</td><td>Intel Core i7 9700K</td></tr>
+                <tr><td>GPU</td><td>NVIDIA GTX 660 2GB</td><td>NVIDIA RTX 2060 6GB</td></tr>
+                <tr><td>RAM</td><td>8 GB</td><td>16 GB</td></tr>
+                <tr><td>Espacio</td><td>80 GB + NitroSMP (1GB)</td><td>SSD 80 GB</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="faq" class="section-padding" style="background:var(--bg-darker);">
+        <h2>Preguntas Frecuentes</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <h3><i class="fas fa-shield-alt"></i> Will I get banned from GTA Online?</h3>
+                <p>No. NitroSMP doesn't interact with Rockstar Online Services. It uses its own hooks and doesn't modify your original game files.</p>
+            </div>
+            <div class="faq-item">
+                <h3><i class="fas fa-check-circle"></i> Does it work with Epic Games / Steam?</h3>
+                <p>Yes, NitroSMP is compatible with all official legal versions of Grand Theft Auto V.</p>
+            </div>
+            <div class="faq-item">
+                <h3><i class="fas fa-server"></i> Can I create my own server?</h3>
+                <p>Absolutely. We provide the server files for free. You can script in C#, JavaScript or Lua.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="donate-section">
+        <div class="donate-card">
+            <h2 style="color:var(--accent-orange); margin-bottom:15px;">Apoya a NitroSMP</h2>
+            <p style="color:var(--text-secondary); margin-bottom:30px;">Ayúdanos a mantener los servidores maestros online y el desarrollo continuo.</p>
+            <a href="#" class="btn-signin-nav" style="background:var(--accent-orange); color:#000; font-weight: 900;">DONAR CON PAYPAL</a>
+        </div>
+    </section>
 
     <footer>
-        <p style="color: var(--text-secondary);">&copy; 2026 NitroSMP Team. Not affiliated with Rockstar Games or Take-Two Interactive.</p>
+        <p>&copy; 2026 NitroSMP Team. Grand Theft Auto V es marca registrada de Rockstar Games. No estamos afiliados.</p>
     </footer>
 
     <script>
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(event, id) { 
-            if (event.target === document.getElementById(id) || event.target.className === 'close-btn') {
-                document.getElementById(id).style.display = 'none';
+        // --- CONFIGURACIÓN SUPABASE ---
+        const SB_URL = 'https://gndwlhhytlifsjykrvzo.supabase.co'; // Pon aquí tu URL
+        const SB_KEY = 'sb_publishable_tDmv4H2XfMRVLIi-mTWzmA_cbKQybzu'; // Pon aquí tu Key
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        // --- LÓGICA MODAL (Sin cambios visuales) ---
+        function toggleModal(show) {
+            document.getElementById('authModal').classList.toggle('active', show);
+        }
+
+        function switchTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+            document.getElementById('regForm').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('loginTab').classList.toggle('active', isLogin);
+            document.getElementById('regTab').classList.toggle('active', !isLogin);
+        }
+
+        window.onclick = function(e) {
+            if (e.target == document.getElementById('authModal')) toggleModal(false);
+        }
+
+        // --- FUNCIONES DE AUTENTICACIÓN ---
+
+        // Registro
+        async function handleRegister() {
+            const user = document.getElementById('regUser').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: pass,
+                options: {
+                    data: { username: user }
+                }
+            });
+
+            if (error) {
+                alert("Error al registrar: " + error.message);
+            } else {
+                alert("Registro enviado. Revisa tu correo para confirmar.");
+                toggleModal(false);
             }
         }
+
+        // Login
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: pass
+            });
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                checkUser();
+                toggleModal(false);
+            }
+        }
+
+        // Cerrar Sesión
+        async function handleLogout() {
+            await supabaseClient.auth.signOut();
+            checkUser();
+        }
+
+        // Comprobar estado del usuario y cambiar botones de la nav
+        async function checkUser() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            const navAuth = document.getElementById('navAuthSection');
+
+            if (user) {
+                // Si el usuario está logueado, cambiamos el botón SIGN IN por LOGOUT
+                navAuth.innerHTML = `
+                    <span style="font-size:0.8rem; font-weight:800; color:var(--primary); margin-right:15px;">HOLA, ${user.user_metadata.username || 'PILOTO'}</span>
+                    <button class="btn-signin-nav" style="background:#cc0000;" onclick="handleLogout()">LOGOUT</button>
+                `;
+            } else {
+                // Si no está logueado, volvemos al estado original
+                navAuth.innerHTML = `
+                    <a href="#how-to-start" class="btn-download-nav">DESCARGAR</a>
+                    <button class="btn-signin-nav" onclick="toggleModal(true)">SIGN IN</button>
+                `;
+            }
+        }
+
+        // Ejecutar checkUser al cargar la página
+        checkUser();
+
     </script>
 </body>
 </html>
