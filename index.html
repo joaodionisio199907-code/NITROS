@@ -19,6 +19,7 @@
             --accent-orange: #f39c12;
             --bg-darker: #08090a;
             --kofi-color: #29abe0;
+            --ps3-blue: #003791;
         }
 
         /* --- BASE --- */
@@ -61,6 +62,10 @@
         .server-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
         .server-info { position: absolute; bottom: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
 
+        /* --- PS3 SECTION --- */
+        .ps3-section { background: linear-gradient(90deg, #000 0%, #001a44 100%); border-left: 5px solid var(--ps3-blue); }
+        .ps3-badge { background: var(--ps3-blue); color: white; padding: 5px 15px; border-radius: 3px; font-weight: 900; font-size: 0.8rem; margin-bottom: 10px; display: inline-block; }
+
         /* --- DONACIONES KO-FI --- */
         .kofi-section { background: linear-gradient(45deg, #141517 0%, #0b0c0d 100%); text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
         .kofi-card { background: rgba(255,255,255,0.03); padding: 40px; border-radius: 20px; border: 1px solid rgba(41, 171, 224, 0.2); max-width: 800px; margin: 0 auto; transition: 0.3s; }
@@ -101,8 +106,8 @@
         <div class="nav-left">
             <div class="nav-links" id="navLinks">
                 <a href="#servers" onclick="closeMenu()">Servidores</a>
+                <a href="#ps3-section" onclick="closeMenu()">Nitro S3</a>
                 <a href="#how-to-start" onclick="closeMenu()">Empezar</a>
-                <a href="#reqs" onclick="closeMenu()">Requisitos</a>
                 <a href="#donations" onclick="closeMenu()">Donar</a>
             </div>
         </div>
@@ -139,6 +144,18 @@
         <h2>Servidores de la Comunidad</h2>
         <div class="server-row" id="serverContainer">
             <p style="color:gray;">Cargando servidores...</p>
+        </div>
+    </section>
+
+    <section id="ps3-section" class="section-padding ps3-section">
+        <div style="max-width: 800px;">
+            <span class="ps3-badge">LEGACY CONSOLE</span>
+            <h2 style="color: #fff;">NitroSMP S3 Launcher</h2>
+            <p style="margin-bottom: 25px;">Revive la experiencia de GTA V en tu <strong>PlayStation 3</strong> con nuestro launcher exclusivo. Conexión directa a servidores optimizados, bypass de seguridad y estabilidad mejorada para consolas con CFW/HEN.</p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
+                <a href="#" class="btn-signin-nav" style="background: var(--ps3-blue); padding: 15px 35px;">DESCARGAR .PKG</a>
+                <p style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fas fa-info-circle"></i> Requiere consola con HEN o CFW instalado.</p>
+            </div>
         </div>
     </section>
 
@@ -201,14 +218,14 @@
                 <button id="regTab" onclick="switchTab('register')" style="background:none; border:none; color:#fff; padding:10px; cursor:pointer; font-weight:700;">REGISTRO</button>
             </div>
             <div id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Email" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff;">
-                <input type="password" id="loginPass" placeholder="Contraseña" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff;">
+                <input type="email" id="loginEmail" placeholder="Email" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff; border: 1px solid #3d4146; padding: 12px; margin-bottom: 10px;">
+                <input type="password" id="loginPass" placeholder="Contraseña" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff; border: 1px solid #3d4146; padding: 12px; margin-bottom: 10px;">
                 <button class="btn-signin-nav" style="width: 100%;" onclick="handleLogin()">ENTRAR</button>
             </div>
             <div id="regForm" style="display: none;">
-                <input type="text" id="regUser" placeholder="Usuario" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff;">
-                <input type="email" id="regEmail" placeholder="Email" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff;">
-                <input type="password" id="regPass" placeholder="Contraseña" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff;">
+                <input type="text" id="regUser" placeholder="Usuario" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff; border: 1px solid #3d4146; padding: 12px; margin-bottom: 10px;">
+                <input type="email" id="regEmail" placeholder="Email" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff; border: 1px solid #3d4146; padding: 12px; margin-bottom: 10px;">
+                <input type="password" id="regPass" placeholder="Contraseña" class="add-server-form" style="width:100%; background:#2a2d30; color:#fff; border: 1px solid #3d4146; padding: 12px; margin-bottom: 10px;">
                 <button class="btn-signin-nav" style="width: 100%; background: var(--accent-orange);" onclick="handleRegister()">CREAR CUENTA</button>
             </div>
         </div>
@@ -276,21 +293,18 @@
                 const fileName = `${Math.random()}.${fileExt}`;
                 const filePath = `${user.id}/${fileName}`;
 
-                // 1. Subir a Storage
                 const { error: uploadError } = await supabaseClient.storage
                     .from('server-images')
                     .upload(filePath, file);
 
                 if (uploadError) throw uploadError;
 
-                // 2. Obtener URL Publica
                 const { data: urlData } = supabaseClient.storage
                     .from('server-images')
                     .getPublicUrl(filePath);
 
                 const publicUrl = urlData.publicUrl;
 
-                // 3. Insertar en tabla
                 const { error: insertError } = await supabaseClient.from('servers').insert([
                     { owner_id: user.id, server_name: name, server_ip: ip, image_url: publicUrl, status: 'pending' }
                 ]);
