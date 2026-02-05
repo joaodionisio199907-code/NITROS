@@ -54,6 +54,22 @@
         .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
         .hero p { max-width: 600px; margin-bottom: 30px; color: var(--text-secondary); font-size: 1.1rem; }
 
+        /* --- SECCIÓN SEPARACIÓN DE LAUNCHERS --- */
+        .launchers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; margin-top: 20px; }
+        .launcher-card { background: #141517; border-radius: 15px; padding: 40px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; position: relative; overflow: hidden; }
+        
+        /* Estilo PC */
+        .launcher-card.pc { border-top: 5px solid var(--primary); }
+        .launcher-card.pc:hover { box-shadow: 0 10px 30px rgba(0, 123, 255, 0.15); transform: translateY(-5px); }
+        
+        /* Estilo PS3 */
+        .launcher-card.ps3 { border-top: 5px solid var(--ps3-blue); }
+        .launcher-card.ps3:hover { box-shadow: 0 10px 30px rgba(0, 55, 145, 0.25); transform: translateY(-5px); }
+
+        .launcher-card h3 { font-size: 1.8rem; font-weight: 900; margin-bottom: 15px; }
+        .launcher-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 25px; min-height: 60px; }
+        .platform-icon { font-size: 3rem; margin-bottom: 20px; opacity: 0.8; }
+
         /* --- SECCIONES --- */
         .section-padding { padding: 80px 10%; }
         .server-row { display: flex; gap: 20px; overflow-x: auto; padding: 20px 0; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; min-height: 200px; }
@@ -61,10 +77,6 @@
         .server-card:hover { transform: translateY(-10px); border-color: var(--primary); }
         .server-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
         .server-info { position: absolute; bottom: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
-
-        /* --- PS3 SECTION --- */
-        .ps3-section { background: linear-gradient(90deg, #000 0%, #001a44 100%); border-left: 5px solid var(--ps3-blue); }
-        .ps3-badge { background: var(--ps3-blue); color: white; padding: 5px 15px; border-radius: 3px; font-weight: 900; font-size: 0.8rem; margin-bottom: 10px; display: inline-block; }
 
         /* --- DONACIONES KO-FI --- */
         .kofi-section { background: linear-gradient(45deg, #141517 0%, #0b0c0d 100%); text-align: center; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -106,7 +118,7 @@
         <div class="nav-left">
             <div class="nav-links" id="navLinks">
                 <a href="#servers" onclick="closeMenu()">Servidores</a>
-                <a href="#ps3-section" onclick="closeMenu()">Nitro S3</a>
+                <a href="#platforms" onclick="closeMenu()">Launchers</a>
                 <a href="#how-to-start" onclick="closeMenu()">Empezar</a>
                 <a href="#donations" onclick="closeMenu()">Donar</a>
             </div>
@@ -116,7 +128,7 @@
         </div>
         <div class="nav-right">
             <div class="auth-buttons" id="navAuthSection">
-                <a href="#how-to-start" style="color: #fff; text-decoration: none; font-weight: 700; font-size: 0.7rem; margin-right:15px;">DESCARGAR</a>
+                <a href="#platforms" style="color: #fff; text-decoration: none; font-weight: 700; font-size: 0.7rem; margin-right:15px;">DESCARGAR</a>
                 <button class="btn-signin-nav" onclick="toggleModal(true)">SIGN IN</button>
             </div>
             <i class="fas fa-bars menu-toggle" onclick="toggleMenu()"></i>
@@ -132,10 +144,36 @@
             <h1>LA EVOLUCIÓN <br> DEL MULTIJUGADOR</h1>
             <p>NitroSMP te permite jugar en servidores privados con mods y una experiencia optimizada.</p>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <a href="#how-to-start" class="btn-signin-nav" style="padding: 15px 40px;">JUGAR AHORA</a>
+                <a href="#platforms" class="btn-signin-nav" style="padding: 15px 40px;">ELEGIR PLATAFORMA</a>
                 <div id="heroOwnerAction">
-                    <a href="#servers" class="btn-signin-nav" style="padding: 15px 40px; background: rgba(255,255,255,0.1); border: 1px solid #fff;">EXPLORAR</a>
+                    <a href="#servers" class="btn-signin-nav" style="padding: 15px 40px; background: rgba(255,255,255,0.1); border: 1px solid #fff;">VER SERVIDORES</a>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="platforms" class="section-padding" style="background: #0e1012;">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h2 style="margin-bottom: 10px;">NUESTROS LAUNCHERS</h2>
+            <p style="color: var(--text-secondary);">Selecciona tu dispositivo para descargar la versión correcta.</p>
+        </div>
+
+        <div class="launchers-grid">
+            <div class="launcher-card pc">
+                <div class="platform-icon" style="color: var(--primary);"><i class="fas fa-desktop"></i></div>
+                <span style="font-size: 0.7rem; font-weight: 800; color: var(--primary);">NITRO PARA PC</span>
+                <h3>NITROSMP</h3>
+                <p>La experiencia definitiva con soporte para mods avanzados, servidores dedicados y máxima fidelidad gráfica.</p>
+                <a href="#" class="btn-signin-nav" style="width: 100%; padding: 15px;">DESCARGAR PARA WINDOWS</a>
+            </div>
+
+            <div class="launcher-card ps3">
+                <div class="platform-icon" style="color: var(--ps3-blue);"><i class="fab fa-playstation"></i></div>
+                <span style="font-size: 0.7rem; font-weight: 800; color: var(--ps3-blue);">NITRO PARA PS3</span>
+                <h3>NITROSPS3</h3>
+                <p>Launcher optimizado para consolas Legacy. Juega online en servidores privados directamente desde tu PlayStation 3.</p>
+                <a href="#" class="btn-signin-nav" style="width: 100%; padding: 15px; background: var(--ps3-blue);">DESCARGAR .PKG (PS3)</a>
+                <p style="margin-top: 15px; font-size: 0.65rem; color: gray;"><i class="fas fa-check-circle"></i> Compatible con HEN / CFW</p>
             </div>
         </div>
     </section>
@@ -144,18 +182,6 @@
         <h2>Servidores de la Comunidad</h2>
         <div class="server-row" id="serverContainer">
             <p style="color:gray;">Cargando servidores...</p>
-        </div>
-    </section>
-
-    <section id="ps3-section" class="section-padding ps3-section">
-        <div style="max-width: 800px;">
-            <span class="ps3-badge">LEGACY CONSOLE</span>
-            <h2 style="color: #fff;">NitroSMP S3 Launcher</h2>
-            <p style="margin-bottom: 25px;">Revive la experiencia de GTA V en tu <strong>PlayStation 3</strong> con nuestro launcher exclusivo. Conexión directa a servidores optimizados, bypass de seguridad y estabilidad mejorada para consolas con CFW/HEN.</p>
-            <div style="display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
-                <a href="#" class="btn-signin-nav" style="background: var(--ps3-blue); padding: 15px 35px;">DESCARGAR .PKG</a>
-                <p style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fas fa-info-circle"></i> Requiere consola con HEN o CFW instalado.</p>
-            </div>
         </div>
     </section>
 
@@ -174,8 +200,8 @@
                 <img src="nitro.png" alt="Nitro Client">
                 <div class="start-content">
                     <span style="color:var(--primary); font-weight:800; font-size:0.8rem;">PASO 2</span>
-                    <h3>Descarga Cliente</h3>
-                    <a href="#" class="btn-signin-nav" style="font-size:0.7rem; background: #fff; color: #000;">DESCARGAR NITRO</a>
+                    <h3>Elige tu Launcher</h3>
+                    <a href="#platforms" class="btn-signin-nav" style="font-size:0.7rem; background: #fff; color: #000;">VER VERSIONES</a>
                 </div>
             </div>
         </div>
