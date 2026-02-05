@@ -26,87 +26,72 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* --- NAVEGACIÓN --- */
+        /* --- NAVEGACIÓN RESPONSIVE --- */
         nav {
-            height: 90px; display: flex; justify-content: space-between; align-items: center;
+            height: 80px; display: flex; justify-content: space-between; align-items: center;
             padding: 0 5%; background: var(--bg-nav); position: fixed; width: 100%; top: 0; z-index: 1000;
             border-bottom: 2px solid var(--primary); backdrop-filter: blur(15px);
         }
-        .nav-links a { color: var(--text-secondary); text-decoration: none; margin-right: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary); }
-        .logo-img { height: 50px; cursor: pointer; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; margin-right: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .logo-img { height: 40px; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* Ocultamos links en móvil para limpieza */
+            nav { height: 70px; }
+            .hero-content h1 { font-size: 2.8rem !important; }
+        }
 
         /* --- HERO --- */
-        .hero { height: 100vh; display: flex; align-items: center; padding: 0 10%; position: relative; overflow: hidden; }
+        .hero { height: 100vh; display: flex; align-items: center; padding: 0 5%; position: relative; overflow: hidden; }
         .hero-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; transform: translate(-50%, -50%); filter: brightness(0.3); }
-        .hero-content h1 { font-size: clamp(3rem, 10vw, 5rem); font-weight: 900; line-height: 1; margin-bottom: 20px; }
+        .hero-content { width: 100%; max-width: 800px; z-index: 1; }
+        .hero-content h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
 
         /* --- SECCIÓN PASOS --- */
-        .section-padding { padding: 100px 10%; }
-        .steps-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .section-padding { padding: 80px 5%; }
+        h2 { font-size: 2rem; margin-bottom: 30px; text-transform: uppercase; font-weight: 900; }
+        
+        .steps-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .step-card { 
-            position: relative; height: 450px; border-radius: 20px; overflow: hidden; 
-            border: 1px solid rgba(255,255,255,0.1); transition: 0.5s;
+            position: relative; height: 400px; border-radius: 15px; overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.4s;
         }
-        .step-card:hover { transform: translateY(-15px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .step-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; opacity: 0.5; }
-        .step-card:hover .step-img { opacity: 0.8; transform: scale(1.1); }
-        .step-content { 
-            position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px; 
-            background: linear-gradient(to top, #000 30%, transparent); 
-        }
-        .step-badge { background: var(--primary); color: white; padding: 5px 15px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; margin-bottom: 15px; display: inline-block; }
+        .step-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; transition: 0.5s; }
+        .step-content { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px; background: linear-gradient(to top, #000 40%, transparent); }
 
         /* --- SERVIDORES --- */
-        .server-row { display: flex; gap: 25px; overflow-x: auto; padding: 20px 5px; scrollbar-width: none; }
-        .server-card { min-width: 300px; height: 200px; background: var(--card-bg); border-radius: 15px; position: relative; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .server-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-        .server-info { position: absolute; bottom: 0; padding: 20px; width: 100%; background: linear-gradient(transparent, rgba(0,0,0,0.9)); }
+        .server-row { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .server-card { min-width: 260px; height: 180px; background: var(--card-bg); border-radius: 12px; position: relative; overflow: hidden; flex-shrink: 0; }
 
-        /* --- ZAP HOSTING & ANIMACIÓN --- */
+        /* --- ZAP HOSTING ANIMACIÓN --- */
         @keyframes zap-heartbeat {
-            0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(87, 187, 138, 0)); }
-            50% { transform: scale(1.03); filter: drop-shadow(0 0 15px rgba(87, 187, 138, 0.5)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(87, 187, 138, 0)); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); filter: drop-shadow(0 0 10px rgba(87, 187, 138, 0.4)); }
         }
         
         .zap-banner-wrapper {
             background: linear-gradient(145deg, #1a1c1e, #0b0c0d);
-            border-radius: 20px;
-            border: 1px solid rgba(87, 187, 138, 0.2);
-            padding: 50px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
+            border-radius: 15px; border: 1px solid rgba(87, 187, 138, 0.2);
+            padding: 30px 15px; text-align: center; gap: 20px; display: flex; flex-direction: column;
         }
-
-        .zap-banner-wrapper a img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            animation: zap-heartbeat 2s infinite ease-in-out;
-            transition: 0.3s;
-        }
-
-        .zap-banner-wrapper a:hover img {
-            animation-play-state: paused;
-            filter: drop-shadow(0 0 25px rgba(87, 187, 138, 0.8));
+        .zap-banner-wrapper img { 
+            max-width: 100%; height: auto; border-radius: 8px; 
+            animation: zap-heartbeat 2.5s infinite ease-in-out; 
         }
 
         /* --- BOTONES --- */
-        .btn { padding: 15px 35px; border-radius: 5px; text-decoration: none; font-weight: 800; display: inline-block; transition: 0.4s; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        .btn { padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: 800; display: inline-block; transition: 0.3s; border: none; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; text-align: center; }
         .btn-primary { background: var(--primary); color: #fff; }
-        .btn-kofi { background: var(--kofi); color: #fff; box-shadow: 0 0 20px rgba(41, 171, 224, 0.2); }
-        .btn-zap { background: var(--zap); color: #fff; }
+        .btn-kofi { background: var(--kofi); color: #fff; }
+        .btn-zap { background: var(--zap); color: #fff; width: 100%; max-width: 300px; margin: 0 auto; }
 
-        /* --- DRAWER --- */
-        .drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: #141517; z-index: 2000; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px; border-left: 3px solid var(--primary); }
+        /* --- DRAWER (VISTA SERVIDOR) --- */
+        .drawer { position: fixed; top: 0; right: -100%; width: 90%; max-width: 350px; height: 100%; background: #141517; z-index: 2000; transition: 0.5s; padding: 30px; border-left: 3px solid var(--primary); }
         .drawer.active { right: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 1999; backdrop-filter: blur(5px); }
 
-        footer { padding: 60px; text-align: center; background: #050505; color: gray; font-size: 0.8rem; }
+        footer { padding: 40px 5%; text-align: center; background: #050505; color: gray; font-size: 0.7rem; }
     </style>
 </head>
 <body>
@@ -114,23 +99,21 @@
     <nav>
         <div class="nav-links">
             <a href="#servers">Servidores</a>
-            <a href="#steps">Cómo Empezar</a>
+            <a href="#steps">Pasos</a>
             <a href="#hosting">Hosting</a>
         </div>
         <img src="logomenu.png" class="logo-img" alt="Logo" onclick="window.scrollTo(0,0)">
-        <div id="navAuthSection">
-            <button class="btn btn-primary" onclick="toggleModal(true)" style="padding: 10px 20px;">Sign In</button>
-        </div>
+        <button class="btn btn-primary" style="padding: 8px 15px; font-size: 0.6rem;">Sign In</button>
     </nav>
 
     <section class="hero">
         <iframe class="hero-video" src="https://www.youtube.com/embed/R7Tx6emmEmY?autoplay=1&mute=1&loop=1&playlist=R7Tx6emmEmY&controls=0&modestbranding=1" frameborder="0"></iframe>
-        <div class="hero-content" data-aos="fade-right">
+        <div class="hero-content" data-aos="fade-up">
             <h1>LA NUEVA<br><span style="color:var(--primary)">EXPERIENCIA</span></h1>
-            <p style="margin-bottom: 30px; color: var(--text-secondary);">NitroSMP: Launcher multiplataforma, servidores privados y rendimiento extremo.</p>
-            <div style="display: flex; gap: 15px;">
-                <a href="#steps" class="btn btn-primary">Ver Pasos</a>
-                <a href="#donations" class="btn btn-kofi"><i class="fas fa-heart"></i> Donar</a>
+            <p style="margin-bottom: 25px; color: var(--text-secondary); font-size: 0.9rem;">Plataforma líder para servidores privados de GTA V.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <a href="#steps" class="btn btn-primary">Empezar</a>
+                <a href="#donations" class="btn btn-kofi"><i class="fas fa-heart"></i> Apoyar</a>
             </div>
         </div>
     </section>
@@ -138,84 +121,72 @@
     <section id="steps" class="section-padding">
         <h2 data-aos="fade-up">GUÍA DE INICIO</h2>
         <div class="steps-container">
-            <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="step-card" data-aos="zoom-in">
                 <img src="GTAV.jpg" class="step-img" alt="GTA V">
                 <div class="step-content">
-                    <span class="step-badge">PASO 01</span>
-                    <h3>ADQUIRIR GTA V</h3>
-                    <p style="color:var(--text-secondary); margin: 10px 0 20px 0; font-size: 0.9rem;">Necesitas el juego original para poder acceder a los servidores de NitroSMP.</p>
-                    <a href="https://www.rockstargames.com/gta-v/buy" target="_blank" class="btn" style="background:white; color:black; width:100%; text-align:center;">Comprar Juego</a>
+                    <span class="step-badge">01</span>
+                    <h3>ADQUIRIR JUEGO</h3>
+                    <p style="color:var(--text-secondary); margin: 10px 0; font-size: 0.8rem;">Necesitas GTA V original.</p>
+                    <a href="https://www.rockstargames.com/gta-v/buy" target="_blank" class="btn" style="background:white; color:black; width:100%;">Tienda</a>
                 </div>
             </div>
-            <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="step-card" data-aos="zoom-in" data-aos-delay="100">
                 <img src="nitro.png" class="step-img" alt="Launcher">
                 <div class="step-content">
-                    <span class="step-badge">PASO 02</span>
-                    <h3>INSTALAR LAUNCHER</h3>
-                    <p style="color:var(--text-secondary); margin: 10px 0 20px 0; font-size: 0.9rem;">Descarga nuestro software oficial para PC o el archivo .PKG para tu PS3.</p>
-                    <a href="#download" class="btn btn-primary" style="width:100%; text-align:center;">Descargar Nitro</a>
-                </div>
-            </div>
-            <div class="step-card" data-aos="fade-up" data-aos-delay="300">
-                <img src="https://images6.alphacoders.com/468/468703.jpg" class="step-img" alt="Servidores">
-                <div class="step-content">
-                    <span class="step-badge">PASO 03</span>
-                    <h3>ELEGIR SERVIDOR</h3>
-                    <p style="color:var(--text-secondary); margin: 10px 0 20px 0; font-size: 0.9rem;">Explora nuestra lista de servidores comunitarios y entra a jugar con un click.</p>
-                    <a href="#servers" class="btn" style="background:rgba(255,255,255,0.1); color:white; width:100%; text-align:center; border: 1px solid white;">Ver Lista</a>
+                    <span class="step-badge">02</span>
+                    <h3>LAUNCHER</h3>
+                    <p style="color:var(--text-secondary); margin: 10px 0; font-size: 0.8rem;">Descarga el software oficial.</p>
+                    <a href="#" class="btn btn-primary" style="width:100%;">Descargar</a>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="servers" class="section-padding" style="background: #08090a;">
-        <h2 data-aos="fade-right">SERVIDORES ACTIVOS</h2>
-        <div class="server-row" id="serverContainer" data-aos="zoom-in"></div>
+        <h2>SERVIDORES</h2>
+        <div class="server-row" id="serverContainer">
+            </div>
     </section>
 
     <section id="hosting" class="section-padding">
-        <div class="zap-banner-wrapper" data-aos="flip-up">
+        <div class="zap-banner-wrapper" data-aos="fade-up">
             <div>
-                <span style="color: var(--zap); font-weight: 800; letter-spacing: 2px; font-size: 0.8rem;">PARTNER OFICIAL</span>
-                <h2 style="margin: 10px 0 5px 0;">¿QUIERES TU PROPIO MUNDO?</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;">Crea tu servidor de NitroSMP hoy mismo. Usa el código: <b style="color: var(--zap);">NITROSM-a-9784</b></p>
+                <span style="color: var(--zap); font-weight: 800; font-size: 0.7rem;">PARTNER OFICIAL</span>
+                <h2 style="margin: 5px 0; font-size: 1.5rem;">TU PROPIO SERVIDOR</h2>
+                <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 15px;">Usa el código: <b style="color: var(--zap);">NITROSM-a-9784</b></p>
             </div>
 
             <a href="https://zap-hosting.com/a/1204b338c0cc742f67f88b8ddbbd743dedd423f0?voucher=NITROSMP-a-9784" target="_blank">
-                <img src="https://zap-hosting.com/interface/download/images.php?type=affiliate&id=450223" alt="ZAP-Hosting Gameserver and Webhosting">
+                <img src="https://zap-hosting.com/interface/download/images.php?type=affiliate&id=450223" alt="ZAP-Hosting">
             </a>
 
-            <a href="https://zap-hosting.com/a/1204b338c0cc742f67f88b8ddbbd743dedd423f0?voucher=NITROSMP-a-9784" class="btn btn-zap">Alquilar Servidor <i class="fas fa-external-link-alt"></i></a>
+            <a href="https://zap-hosting.com/a/1204b338c0cc742f67f88b8ddbbd743dedd423f0?voucher=NITROSMP-a-9784" class="btn btn-zap">Alquilar Ahora</a>
         </div>
     </section>
 
     <section id="donations" class="section-padding" style="text-align: center;">
-        <div data-aos="zoom-out">
-            <i class="fas fa-coffee" style="font-size: 3rem; color: var(--kofi); margin-bottom: 20px;"></i>
-            <h2>APOYA EL PROYECTO</h2>
-            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 30px;">Ayúdanos a mantener la plataforma NitroSMP activa y sin publicidad intrusiva.</p>
-            <a href="https://ko-fi.com/TU_USUARIO" target="_blank" class="btn btn-kofi" style="padding: 20px 60px;">Invítanos a un café en Ko-fi</a>
+        <div data-aos="zoom-in">
+            <i class="fas fa-coffee" style="font-size: 2.5rem; color: var(--kofi); margin-bottom: 15px;"></i>
+            <h2>APOYA AL EQUIPO</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 25px; font-size: 0.85rem;">Mantenemos NitroSMP gracias a tu ayuda.</p>
+            <a href="https://ko-fi.com/TU_USUARIO" target="_blank" class="btn btn-kofi">Donar en Ko-fi</a>
         </div>
     </section>
 
     <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
     <div class="drawer" id="drawer">
-        <h2 id="drwName">Cargando...</h2>
-        <img id="drwImg" src="" style="width: 100%; border-radius: 10px; margin: 20px 0;">
-        <p id="drwIp" style="color: var(--primary); font-weight: 800; font-size: 1.2rem;"></p>
-        <div style="margin-top: 20px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px;">
-            <p><i class="fas fa-users"></i> Slots: <span id="drwPlayers">--/--</span></p>
-            <p><i class="fas fa-shield-alt"></i> Anti-DDoS Activo</p>
-        </div>
-        <button class="btn btn-primary" style="width: 100%; margin-top: 30px;" onclick="copyIp()">Copiar IP</button>
+        <h2 id="drwName" style="font-size: 1.2rem;">Cargando...</h2>
+        <img id="drwImg" src="" style="width: 100%; border-radius: 8px; margin: 15px 0;">
+        <p id="drwIp" style="color: var(--primary); font-weight: 800;"></p>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="copyIp()">Copiar IP</button>
     </div>
 
     <footer>
-        <p>&copy; 2026 NitroSMP Team. No afiliado con Rockstar Games.</p>
+        <p>&copy; 2026 NitroSMP Team.</p>
     </footer>
 
     <script>
-        AOS.init({ duration: 1000, once: true });
+        AOS.init({ duration: 800, once: true });
 
         const SB_URL = 'https://gndwlhhytlifsjykrvzo.supabase.co';
         const SB_KEY = 'sb_publishable_tDmv4H2XfMRVLIi-mTWzmA_cbKQybzu';
@@ -227,15 +198,12 @@
             if (data && data.length > 0) {
                 container.innerHTML = data.map(srv => `
                     <div class="server-card" onclick="openDrawer('${srv.server_name}', '${srv.server_ip}', '${srv.image_url}')">
-                        <img src="${srv.image_url}">
-                        <div class="server-info">
-                            <h4>${srv.server_name}</h4>
-                            <small>${srv.server_ip}</small>
+                        <img src="${srv.image_url}" style="width:100%; height:100%; object-fit:cover; opacity:0.6;">
+                        <div style="position:absolute; bottom:0; padding:15px; width:100%; background:linear-gradient(transparent, #000);">
+                            <h4 style="font-size:0.9rem;">${srv.server_name}</h4>
                         </div>
                     </div>
                 `).join('');
-            } else {
-                container.innerHTML = "<p style='color:gray'>No hay servidores activos en este momento.</p>";
             }
         }
 
@@ -243,7 +211,6 @@
             document.getElementById('drwName').innerText = name;
             document.getElementById('drwIp').innerText = ip;
             document.getElementById('drwImg').src = img;
-            document.getElementById('drwPlayers').innerText = Math.floor(Math.random()*50) + "/100";
             document.getElementById('drawer').classList.add('active');
             document.getElementById('overlay').style.display = 'block';
         }
@@ -255,7 +222,7 @@
 
         function copyIp() {
             navigator.clipboard.writeText(document.getElementById('drwIp').innerText);
-            alert("IP Copiada!");
+            alert("¡IP Copiada!");
         }
 
         loadServers();
